@@ -1,0 +1,15 @@
+### Create An Account
+POST http://tasklist.test/api/register
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "infinitypaul@live.com",
+    "password": "Password_#1",
+    "password_confirmation": "Password_#1",
+    "username": "infinitypaul"
+
+}
+
+###
