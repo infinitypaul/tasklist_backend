@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperTask
+ */
 class Task extends Model
 {
     protected $fillable = ['name'];
