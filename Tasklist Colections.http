@@ -12,4 +12,12 @@ Content-Type: application/json
 
 }
 
-###
+### Login
+POST http://tasklist.test/api/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "infinitypaul@live.com",
+    "password": "Password_#1"
+}
