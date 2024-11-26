@@ -10,3 +10,8 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [RegistrationController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('tasks', \App\Http\Controllers\TaskController::class);
+});
+

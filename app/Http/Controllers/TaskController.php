@@ -33,7 +33,7 @@ class TaskController extends Controller
     }
 
 
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(Task $task, UpdateTaskRequest $request)
     {
         $task->name = $request->name;
         $task->save();
