@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Permission;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -14,6 +15,10 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
+        if($shared = $user->shared()->with('permission')->where('task_id', $task->id)->first()){
+            return $shared->permission->name === Permission::VIEW;
+        }
+
         return $user->id === $task->user_id;
     }
 
@@ -24,6 +29,10 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
+        if($shared = $user->shared()->with('permission')->where('task_id', $task->id)->first()){
+            return $shared->permission->name === Permission::EDIT;
+        }
+
         return $user->id === $task->user_id;
     }
 

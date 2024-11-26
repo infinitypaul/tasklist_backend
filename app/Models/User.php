@@ -56,4 +56,21 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class);
     }
+
+    public function sharedTasks(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Task::class,
+            SharedTask::class,
+            'invitee',
+            'id',
+            'id',
+            'task_id'
+        );
+    }
+
+    public function shared(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SharedTask::class, 'invitee');
+    }
 }

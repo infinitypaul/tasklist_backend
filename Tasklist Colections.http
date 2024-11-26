@@ -19,7 +19,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "email": "infinitypaul@live.com",
+    "email": "infinitypaul3@live.com",
     "password": "Password_#1"
 }
 > {% client.global.set("token", response.body.access_token) %}
@@ -57,7 +57,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Get Single Task
-GET {{host}}/api/tasks/1
+GET {{host}}/api/tasks/4
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -67,5 +67,30 @@ POST {{host}}/api/tasks/mark/4
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### Share Task
+POST {{host}}/api/tasks/share/4
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "username": "infinitypaul3",
+    "permission": 1
+}
+
+### List Permissions
+GET {{host}}/api/permissions
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Task Shared With Me
+GET {{host}}/api/tasks/shared
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
 
 
