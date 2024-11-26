@@ -5,10 +5,10 @@ Content-Type: application/json
 
 {
     "name": "John Doe",
-    "email": "infinitypaul2@live.com",
+    "email": "infinitypaul3@live.com",
     "password": "Password_#1",
     "password_confirmation": "Password_#1",
-    "username": "infinitypaul2"
+    "username": "infinitypaul3"
 
 }
 > {% client.global.set("token", response.body.access_token) %}
@@ -35,7 +35,7 @@ Authorization: Bearer {{token}}
 }
 
 ### Update Task
-PUT {{host}}/api/tasks/2
+PUT {{host}}/api/tasks/4
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
