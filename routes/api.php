@@ -13,5 +13,6 @@ Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('tasks', \App\Http\Controllers\TaskController::class);
+    Route::post('tasks/mark/{task}', [\App\Http\Controllers\TaskController::class, 'mark_task']);
 });
 

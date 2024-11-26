@@ -62,4 +62,10 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+### Mark Task As Completed Or Incomplete
+POST {{host}}/api/tasks/mark/4
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
 

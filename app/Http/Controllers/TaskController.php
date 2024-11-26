@@ -67,5 +67,17 @@ class TaskController extends Controller
         ]);
     }
 
+    public function mark_task(Task $task)
+    {
+        Gate::authorize('update', $task);
+        $task->status = !$task->status;
+        $task->save();
+
+        return response()->json([
+            'message' => 'Task marked '.($task->status ? ' completed' : ' incomplete'),
+            'task' => $task
+        ]);
+    }
+
 
 }
