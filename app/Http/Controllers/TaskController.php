@@ -4,32 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
+    protected TaskRepository $taskRepository;
+
+    public function __construct(TaskRepository $taskRepository)
+    {
+        $this->taskRepository = $taskRepository;
+    }
     public function index()
     {
-        $user = auth()->user();
-
-        $tasks = $user->tasks()->orderBy('created_at')->get();
+        $tasks = $this->taskRepository->getUserTasks(auth()->user());
 
         return response()->json([
-            'tasks' => $tasks
+            'tasks' => TaskResource::collection($tasks),
         ]);
     }
 
     public function store(StoreTaskRequest $request)
     {
-        $user = auth()->user();
-
-        $task = $user->tasks()->create($request->validated());
+        $task = $this->taskRepository->createTask(auth()->user(), $request->validated());
 
         return response()->json([
             'message' => 'Task created!',
-            'task' => $task
+            'task' => new TaskResource($task),
         ]);
     }
 
@@ -38,12 +42,11 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
 
-        $task->name = $request->name;
-        $task->save();
+        $updatedTask = $this->taskRepository->updateTask($task, $request->validated());
 
         return response()->json([
-            'message' => 'Task created!',
-            'task' => $task
+            'message' => 'Task updated!',
+            'task' => new TaskResource($updatedTask),
         ]);
     }
 
@@ -61,22 +64,24 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         Gate::authorize('view', $task);
-        $user = auth()->user();
+
+        $shared = auth()->user()->shared()->where('task_id', $task->id)->exists();
+
         return response()->json([
-            'task' => $task,
-            'shared' => $user->shared()->where('task_id', $task->id)->exists()
+            'task' => new TaskResource($task),
+            'shared' => $shared,
         ]);
     }
 
     public function mark_task(Task $task)
     {
         Gate::authorize('update', $task);
-        $task->status = !$task->status;
-        $task->save();
+
+        $updatedTask = $this->taskRepository->toggleTaskStatus($task);
 
         return response()->json([
-            'message' => 'Task marked '.($task->status ? ' completed' : ' incomplete'),
-            'task' => $task
+            'message' => 'Task marked ' . ($updatedTask->status ? 'completed' : 'incomplete'),
+            'task' => new TaskResource($updatedTask),
         ]);
     }
 

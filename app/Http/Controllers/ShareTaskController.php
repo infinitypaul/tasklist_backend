@@ -3,35 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShareTaskRequest;
+use App\Http\Resources\SharedTaskResource;
 use App\Models\Permission;
 use App\Models\SharedTask;
 use App\Models\Task;
 use App\Models\User;
+use App\Repositories\SharedTaskRepository;
 use Illuminate\Http\Request;
 
 class ShareTaskController extends Controller
 {
+    protected SharedTaskRepository $sharedTaskRepository;
+
+    public function __construct(SharedTaskRepository $sharedTaskRepository)
+    {
+        $this->sharedTaskRepository = $sharedTaskRepository;
+    }
     public function share_task(ShareTaskRequest $request, Task $task)
     {
         $user = auth()->user();
-        $invited_user = User::whereUsername($request->username)->first();
+        $invitedUser = $request->username;
 
-
-        $shared_task = SharedTask::where('task_id', $task->id)
-            ->where('invitee', $invited_user->id)
-            ->where('invited_by', $user->id)
-            ->first();
-
-        if ($shared_task) {
+        if ($this->sharedTaskRepository->isTaskAlreadyShared($task->id, $user->id, $invitedUser->id)) {
             return response()->json(['message' => 'Task already shared with this user']);
         }
 
-        $shared_task =  new SharedTask();
-        $shared_task->task()->associate($task);
-        $shared_task->permission()->associate($request->permission);
-        $shared_task->invitee = $invited_user->id;
-        $shared_task->invitedBy()->associate($user);
-        $shared_task->save();
+        $sharedTask = $this->sharedTaskRepository->createSharedTask([
+            'task_id' => $task->id,
+            'invited_by' => $user->id,
+            'invitee' => $invitedUser->id,
+            'permission_id' => $request->permission,
+        ]);
 
         return response()->json(['message' => 'Task shared successfully']);
     }
@@ -43,22 +45,19 @@ class ShareTaskController extends Controller
 
     public function shared_with_me()
     {
-        $user = auth()->user();
-        $sharedTasks = SharedTask::with(['task', 'permission'])
-            ->where('invitee', $user->id)
-            ->get();
+        $sharedTasks = $this->sharedTaskRepository->getTasksSharedWith(auth()->user());
 
-        return response()->json(['data' => $sharedTasks]);
+        return response()->json([
+            'data' => SharedTaskResource::collection($sharedTasks),
+        ]);
     }
 
     public function task_i_shared(Task $task)
     {
-        $user = auth()->user();
-        $sharedTasks = SharedTask::with(['task', 'invitee:id,username', 'permission'])
-            ->where('task_id', $task->id)
-            ->where('invited_by', $user->id)
-            ->get();
+        $sharedTasks = $this->sharedTaskRepository->getTasksSharedByUser(auth()->user(), $task->id);
 
-        return response()->json(['data' => $sharedTasks]);
+        return response()->json([
+            'data' => SharedTaskResource::collection($sharedTasks),
+        ]);
     }
 }
