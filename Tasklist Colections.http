@@ -5,10 +5,10 @@ Content-Type: application/json
 
 {
     "name": "John Doe",
-    "email": "infinitypaul7@live.com",
+    "email": "infinitypaul76@live.com",
     "password": "Password_#1",
     "password_confirmation": "Password_#1",
-    "username": "infinitypaul7"
+    "username": "infinitypaul76"
 
 }
 > {% client.global.set("token", response.body.data.token) %}
