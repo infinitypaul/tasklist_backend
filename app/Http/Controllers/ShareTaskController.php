@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShareTaskRequest;
+use App\Http\Resources\PermissionResource;
 use App\Http\Resources\SharedTaskResource;
 use App\Models\Permission;
 use App\Models\SharedTask;
@@ -22,13 +23,17 @@ class ShareTaskController extends Controller
     public function share_task(ShareTaskRequest $request, Task $task)
     {
         $user = auth()->user();
-        $invitedUser = $request->username;
+        $invitedUser = User::whereUsername($request->username)->first();
 
         if ($this->sharedTaskRepository->isTaskAlreadyShared($task->id, $user->id, $invitedUser->id)) {
             return response()->json(['message' => 'Task already shared with this user']);
         }
 
-        $sharedTask = $this->sharedTaskRepository->createSharedTask([
+        if ($invitedUser->id === $user->id) {
+            return response()->json(['message' => 'You cannot share a task with yourself.'], 400);
+        }
+
+        $this->sharedTaskRepository->createSharedTask([
             'task_id' => $task->id,
             'invited_by' => $user->id,
             'invitee' => $invitedUser->id,
@@ -40,7 +45,7 @@ class ShareTaskController extends Controller
 
     public function permission()
     {
-        return response()->json(['data' => Permission::all()]);
+        return response()->json(['data' => PermissionResource::collection(Permission::all())]);
     }
 
     public function shared_with_me()

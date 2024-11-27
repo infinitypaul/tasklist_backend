@@ -16,7 +16,7 @@ class SharedTaskRepository
 
     public function getTasksSharedByUser(User $user, $taskId): \Illuminate\Database\Eloquent\Collection
     {
-        return SharedTask::with(['task', 'invitee:id,username', 'permission'])
+        return SharedTask::with(['task', 'invitee', 'invitedBy', 'permission'])
             ->where('task_id', $taskId)
             ->where('invited_by', $user->id)
             ->get();
