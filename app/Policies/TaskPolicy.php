@@ -16,7 +16,7 @@ class TaskPolicy
     public function view(User $user, Task $task): bool
     {
         if($shared = $user->shared()->with('permission')->where('task_id', $task->id)->first()){
-            return $shared->permission->name === Permission::VIEW;
+            return in_array($shared->permission->name, [Permission::VIEW, Permission::EDIT]);
         }
 
         return $user->id === $task->user_id;

@@ -99,6 +99,17 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+### My Profile
+GET {{host}}/api/me
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Logout
+POST {{host}}/api/logout
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 
 

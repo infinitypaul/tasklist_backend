@@ -27,9 +27,11 @@ class SharedTask extends Model
         return $this->belongsTo(User::class, 'invited_by');
     }
 
-    public function invitee(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function inviteeUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'invitee');
     }
+
+
 
 }

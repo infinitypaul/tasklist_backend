@@ -19,6 +19,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('tasks/mark/{task}', [\App\Http\Controllers\TaskController::class, 'mark_task']);
     Route::post('tasks/share/{task}', [\App\Http\Controllers\ShareTaskController::class, 'share_task']);
     Route::get('permissions', [\App\Http\Controllers\ShareTaskController::class, 'permission']);
+    Route::post('logout', [\App\Http\Controllers\UserController::class, 'logout']);
+    Route::get('me', [\App\Http\Controllers\UserController::class, 'profile']);
 
 });
 
