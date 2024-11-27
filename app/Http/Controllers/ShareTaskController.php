@@ -49,6 +49,16 @@ class ShareTaskController extends Controller
             ->get();
 
         return response()->json(['data' => $sharedTasks]);
+    }
 
+    public function task_i_shared(Task $task)
+    {
+        $user = auth()->user();
+        $sharedTasks = SharedTask::with(['task', 'invitee:id,username', 'permission'])
+            ->where('task_id', $task->id)
+            ->where('invited_by', $user->id)
+            ->get();
+
+        return response()->json(['data' => $sharedTasks]);
     }
 }

@@ -61,9 +61,10 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         Gate::authorize('view', $task);
-
+        $user = auth()->user();
         return response()->json([
-            'task' => $task
+            'task' => $task,
+            'shared' => $user->shared()->where('task_id', $task->id)->exists()
         ]);
     }
 

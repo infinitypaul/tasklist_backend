@@ -19,7 +19,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "email": "infinitypaul3@live.com",
+    "email": "infinitypaul@live.com",
     "password": "Password_#1"
 }
 > {% client.global.set("token", response.body.access_token) %}
@@ -90,6 +90,13 @@ GET {{host}}/api/tasks/shared
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+### Task I Shared
+GET {{host}}/api/tasks/4/shared
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
 
 
 

@@ -13,6 +13,7 @@ Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('tasks/shared', [\App\Http\Controllers\ShareTaskController::class, 'shared_with_me']);
+    Route::get('tasks/{task}/shared', [\App\Http\Controllers\ShareTaskController::class, 'task_i_shared']);
     Route::apiResource('tasks', \App\Http\Controllers\TaskController::class);
 
     Route::post('tasks/mark/{task}', [\App\Http\Controllers\TaskController::class, 'mark_task']);
